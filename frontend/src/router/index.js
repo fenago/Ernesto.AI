@@ -21,20 +21,6 @@ const router = new Router({
   routes: [
     layout('Default', [
       route('Dashboard'),
-
-      // Pages
-      route('UserProfile', null, 'components/profile'),
-
-      // Components
-      route('Notifications', null, 'components/notifications'),
-      route('Icons', null, 'components/icons'),
-      route('Typography', null, 'components/typography'),
-
-      // Tables
-      route('Regular Tables', null, 'tables/regular'),
-
-      // Maps
-      route('Google Maps', null, 'maps/google'),
     ]),
   ],
 })

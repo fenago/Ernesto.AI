@@ -5,17 +5,6 @@
       v-text="heading"
     />
 
-    <div
-      v-if="link"
-      class="text-body-2 font-weight-light"
-    >
-      Please checkout the <a
-        :href="`https://vuetifyjs.com/en/${link}`"
-        class="text-decoration-none secondary--text"
-        target="_blank"
-      >full documentation</a>
-    </div>
-
     <v-responsive
       class="text-center mx-auto text-body-1 font-weight-light"
       max-width="400"

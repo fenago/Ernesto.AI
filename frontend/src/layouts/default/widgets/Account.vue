@@ -50,7 +50,6 @@
     data: () => ({
       profile: [
         { title: 'Profile' },
-        { title: 'Settings' },
         { divider: true },
         { title: 'Log out' },
       ],

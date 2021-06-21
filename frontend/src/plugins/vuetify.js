@@ -6,9 +6,19 @@ import ripple from 'vuetify/lib/directives/ripple'
 
 Vue.use(Vuetify, { directives: { ripple } })
 
-const theme = {
-  primary: '#E91E63',
+const darkTheme = {
+  primary: '#1967C0',
   secondary: '#9C27b0',
+  accent: '#e91e63',
+  info: '#00CAE3',
+  success: '#4CAF50',
+  warning: '#FB8C00',
+  error: '#FF5252',
+}
+
+const lightTheme = {
+  primary: '#88BDBC',
+  secondary: '#254E58',
   accent: '#e91e63',
   info: '#00CAE3',
   success: '#4CAF50',
@@ -23,8 +33,8 @@ export default new Vuetify({
   },
   theme: {
     themes: {
-      dark: theme,
-      light: theme,
+      dark: darkTheme,
+      light: lightTheme,
     },
   },
 })

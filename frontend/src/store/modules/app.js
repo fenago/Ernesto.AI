@@ -4,51 +4,19 @@ import { make } from 'vuex-pathify'
 // Data
 const state = {
   drawer: null,
-  drawerImage: true,
+  drawerImage: false,
   mini: false,
   items: [
     {
       title: 'Dashboard',
       icon: 'mdi-view-dashboard',
       to: '/',
-      items: [
-        {
-          title: 'Subdashbaord',
-          icon: 'mdi-view-dashboard',
-          to: '/sub-dashboard',
-        },
-      ],
     },
-    {
-      title: 'User Profile',
-      icon: 'mdi-account',
-      to: '/components/profile/',
-    },
-    {
-      title: 'Regular Tables',
-      icon: 'mdi-clipboard-outline',
-      to: '/tables/regular/',
-    },
-    {
-      title: 'Typography',
-      icon: 'mdi-format-font',
-      to: '/components/typography/',
-    },
-    {
-      title: 'Icons',
-      icon: 'mdi-chart-bubble',
-      to: '/components/icons/',
-    },
-    {
-      title: 'Google Maps',
-      icon: 'mdi-map-marker',
-      to: '/maps/google/',
-    },
-    {
-      title: 'Notifications',
-      icon: 'mdi-bell',
-      to: '/components/notifications/',
-    },
+    // {
+    //   title: 'User Profile',
+    //   icon: 'mdi-account',
+    //   to: '/components/profile/',
+    // },
   ],
 }
 
