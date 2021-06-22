@@ -19,11 +19,19 @@ const router = new Router({
     return { x: 0, y: 0 }
   },
   routes: [
+    // all routes that need to get rendered outside view (layout) should not be the children of layout('Default')
+
+    // authentication
+    route('authentication/LoginPage', null, '/login'),
+
+    // following routes will get rendered inside view (layout)
     layout('Default', [
-      route('Dashboard'),
+      route('DashboardPage'),
     ]),
   ],
 })
+
+console.log(router)
 
 router.beforeEach((to, from, next) => {
   return to.path.endsWith('/') ? next() : next(trailingSlash(to.path))

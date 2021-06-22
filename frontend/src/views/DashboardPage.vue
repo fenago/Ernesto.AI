@@ -14,6 +14,6 @@
 <script>
 // Utilities
   export default {
-    name: 'DashboardView',
+    name: 'DashboardPage',
   }
 </script>
