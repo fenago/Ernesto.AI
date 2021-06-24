@@ -22,11 +22,11 @@ const router = new Router({
     // all routes that need to get rendered outside view (layout) should not be the children of layout('Default')
 
     // authentication
-    route('authentication/LoginPage', null, '/login'),
+    route('authentication/Login', null, '/login'),
 
     // following routes will get rendered inside view (layout)
     layout('Default', [
-      route('DashboardPage'),
+      route('Dashboard'),
     ]),
   ],
 })
