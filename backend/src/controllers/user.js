@@ -1,5 +1,5 @@
 const User = require('../models/user');
-const {uploader} = require('../utils/index');
+const { uploader } = require('../services/functionsServices/cloudinary');
 
 // @route GET admin/user
 // @desc Returns all users
