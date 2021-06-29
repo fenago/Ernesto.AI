@@ -1,14 +1,16 @@
-let azureConfig = require("./defaultCreds");
+let azureConfig = require("../../services/constantsServices/azureContantService/azureDefaultConstantService");
 
-var webauth_clientId = process.env.webauth_clientId;
-var webauth_clientSecret = process.env.webauth_clientSecret;
-var tenantId = process.env.tenantId;
-var redirectUrl = process.env.redirectUrl;
+var WEB_AUTH_CLIENT_ID = process.env.WEB_AUTH_CLIENT_ID;
+var WEB_AUTH_CLIENT_SECRET = process.env.WEB_AUTH_CLIENT_SECRET;
+var TENANT_ID = process.env.TENANT_ID;
+var REDIRECT_URI = process.env.REDIRECT_URI;
 
-azureConfig.creds.clientID = webauth_clientId;
-azureConfig.creds.clientSecret = webauth_clientSecret;
-azureConfig.creds.identityMetadata = `https://login.microsoftonline.com/${tenantId}/v2.0/.well-known/openid-configuration`;
-azureConfig.destroySessionUrl = azureConfig.destroySessionUrl + redirectUrl;
-azureConfig.creds.redirectUrl = redirectUrl + "/auth/openid/return";
+azureConfig.creds.clientID = WEB_AUTH_CLIENT_ID;
+azureConfig.creds.clientSecret = WEB_AUTH_CLIENT_SECRET;
+azureConfig.creds.identityMetadata = `https://login.microsoftonline.com/${TENANT_ID}/v2.0/.well-known/openid-configuration`;
+azureConfig.destroySessionUrl = azureConfig.destroySessionUrl + REDIRECT_URI;
+azureConfig.creds.redirectUrl = REDIRECT_URI + "/auth/openid/return";
 
-module.exports = azureConfig;
+module.exports = {
+  azureConfig,
+};
