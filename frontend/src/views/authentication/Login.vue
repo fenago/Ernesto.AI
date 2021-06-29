@@ -109,8 +109,7 @@
     },
     methods: {
       onLoginWithAzureAD () {
-        // location.assign(`${baseUrl()}/login`)
-        this.$router.push('/')
+        location.assign(`${baseUrl()}/login`)
       },
     },
   }

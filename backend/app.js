@@ -719,7 +719,7 @@ app.get("/logout", function (req, res) {
 
 app.get("/home", checkLoginStatus, function (request, response) {
   // response.sendFile(path.join(__dirname + '/public/index.html'));
-  response.redirect("/#/home/dashboard/");
+  response.redirect("/#/");
 });
 
 app.get("/student/home", checkLoginStatus, function (request, response) {
