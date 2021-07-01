@@ -6,6 +6,6 @@ export const constants = {
         ADMIN: 'admin',
     },
     sessionStorageKeys: {
-        USER: 'user',
+        USER: 'userSession',
     },
   }

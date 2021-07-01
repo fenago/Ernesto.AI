@@ -26,37 +26,43 @@
 
     <default-go-home />
 
-    <default-account />
+    <!-- <default-account /> -->
+
+    <default-logout />
   </v-app-bar>
 </template>
 
 <script>
-  // Utilities
+// Utilities
   import { get, sync } from 'vuex-pathify'
 
   export default {
     name: 'DefaultBar',
 
     components: {
-      DefaultAccount: () => import(
-        /* webpackChunkName: "default-account" */
-        './widgets/Account'
-      ),
-      DefaultDrawerToggle: () => import(
+      // DefaultAccount: () => import(
+      //   /* webpackChunkName: "default-account" */
+      //   './widgets/Account'
+      // ),
+      DefaultDrawerToggle: () =>
+      import(
         /* webpackChunkName: "default-drawer-toggle" */
         './widgets/DrawerToggle'
       ),
-      DefaultGoHome: () => import(
+      DefaultGoHome: () =>
+      import(
         /* webpackChunkName: "default-go-home" */
         './widgets/GoHome'
+      ),
+      DefaultLogout: () =>
+      import(
+        /* webpackChunkName: "default-account" */
+        './widgets/Logout'
       ),
     },
 
     computed: {
-      ...sync('app', [
-        'drawer',
-        'mini',
-      ]),
+      ...sync('app', ['drawer', 'mini']),
       name: get('route/name'),
     },
   }

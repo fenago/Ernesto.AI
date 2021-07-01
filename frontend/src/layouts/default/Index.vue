@@ -17,15 +17,18 @@
     name: 'DefaultLayout',
 
     components: {
-      DefaultBar: () => import(
+      DefaultBar: () =>
+      import(
         /* webpackChunkName: "default-app-bar" */
         './AppBar'
       ),
-      DefaultDrawer: () => import(
+      DefaultDrawer: () =>
+      import(
         /* webpackChunkName: "default-drawer" */
         './Drawer'
       ),
-      DefaultFooter: () => import(
+      DefaultFooter: () =>
+      import(
         /* webpackChunkName: "default-footer" */
         './Footer'
       ),
@@ -33,7 +36,8 @@
       //   /* webpackChunkName: "default-settings" */
       //   './Settings'
       // ),
-      DefaultView: () => import(
+      DefaultView: () =>
+      import(
         /* webpackChunkName: "default-view" */
         './View'
       ),

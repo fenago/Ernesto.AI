@@ -37,9 +37,7 @@
                     </v-card-title>
                   </v-row>
                   <v-card-text class="text-center pt-8">
-                    <v-row
-                      class="flex-column"
-                    >
+                    <v-row class="flex-column">
                       <v-col>
                         <v-btn
                           width="100%"
@@ -109,9 +107,10 @@
     },
     methods: {
       onLoginWithAzureAD () {
-        // location.assign(`${baseUrl()}/login`)
-        this.$router.push('/')
+        location.assign(`${baseUrl()}/login`)
       },
+      routeToForgetPassword () {},
+      routeToRegister () {},
     },
   }
 </script>

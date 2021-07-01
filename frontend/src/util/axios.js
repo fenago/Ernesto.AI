@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { baseUrl } from './helpers'
-import { constants } from './constants'
+// import store from '../store/index'
 
 const instance = axios.create({
   baseURL: baseUrl(),
@@ -15,10 +15,10 @@ instance.interceptors.response.use(
   error => {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // unautherized
-    if (error.response.status === 403) {
-      sessionStorage.removeItem(constants.sessionStorageKeys.USER)
-      location.assign(`${baseUrl()}/logout`)
-    }
+    // if (error.response.status === 403) {
+    //   store.dispatch('user/clearSession')
+    //   location.assign(`${baseUrl()}/logout`)
+    // }
     return Promise.reject(error)
   },
 )

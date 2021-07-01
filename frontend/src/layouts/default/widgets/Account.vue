@@ -34,7 +34,7 @@
         <app-bar-item
           v-else
           :key="`item-${i}`"
-          to="/"
+          :to="p.to"
         >
           <v-list-item-title v-text="p.title" />
         </app-bar-item>
@@ -49,9 +49,15 @@
 
     data: () => ({
       profile: [
-        { title: 'Profile' },
+        {
+          title: 'Profile',
+          to: '/profile',
+        },
         { divider: true },
-        { title: 'Log out' },
+        {
+          title: 'Log out',
+          to: '/',
+        },
       ],
     }),
   }
