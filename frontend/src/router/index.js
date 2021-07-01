@@ -20,7 +20,7 @@ const router = new Router({
     // authentication
     {
       path: '/login',
-      name: 'login',
+      name: 'Login',
       component: () => import('../views/authentication/Login.vue'),
     },
 
@@ -28,7 +28,7 @@ const router = new Router({
     layout('Default', [
       {
         path: '',
-        name: 'dashboard',
+        name: 'Dashboard',
         component: () => import('../views/Dashboard.vue'),
       },
     ]),
@@ -46,7 +46,7 @@ router.beforeEach(async (to, from, next) => {
     !store.getters['user/isAuthenticated']
   ) {
     store.dispatch('user/clearSession')
-    return next({ name: 'login' })
+    return next({ name: 'Login' })
   }
   return to.path.endsWith('/') ? next() : next(trailingSlash(to.path))
 })
