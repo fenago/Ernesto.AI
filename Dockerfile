@@ -24,5 +24,5 @@ RUN npm install
 # RUN npm ci --only=production
 
 
-EXPOSE 80
-CMD [ "node", "app.js" ]
+EXPOSE 8080
+CMD [ "node", "src/server.js" ]
