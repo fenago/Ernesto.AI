@@ -1,9 +1,7 @@
 // Imports
 import Vue from 'vue'
 import Router from 'vue-router'
-import { trailingSlash } from '@/util/helpers'
 import { layout } from '@/util/routes'
-import store from '../store/index'
 
 Vue.use(Router)
 
@@ -16,15 +14,13 @@ const router = new Router({
     return { x: 0, y: 0 }
   },
   routes: [
-    // all routes that need to get rendered outside view (layout) should not be the children of layout('Default')
-    // authentication
-    {
-      path: '/login',
-      name: 'Login',
-      component: () => import('../views/authentication/Login.vue'),
-    },
+    /**
+     * all routes that need to get rendered outside view (layout) should not be the children of layout('Default')
+     */
 
-    // following routes will get rendered inside view (layout)
+    /**
+     * following routes will get rendered inside view (layout)
+     */
     layout('Default', [
       {
         path: '',
@@ -33,22 +29,6 @@ const router = new Router({
       },
     ]),
   ],
-})
-
-router.beforeEach(async (to, from, next) => {
-  if (store.getters['user/isSessionExpired']) {
-    await store.dispatch('user/setSession')
-  }
-  if (to.path.includes('/login') && store.getters['user/isAuthenticated']) {
-    return next(from.path)
-  } else if (
-    !to.path.includes('/login') &&
-    !store.getters['user/isAuthenticated']
-  ) {
-    store.dispatch('user/clearSession')
-    return next({ name: 'Login' })
-  }
-  return to.path.endsWith('/') ? next() : next(trailingSlash(to.path))
 })
 
 export default router

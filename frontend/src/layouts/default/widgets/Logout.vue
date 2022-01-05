@@ -18,10 +18,7 @@
   export default {
     name: 'DefaultLogout',
     methods: {
-      onLogout () {
-        store.dispatch('user/clearSession')
-        location.assign(`${baseUrl()}/logout`)
-      },
+      onLogout () {},
     },
   }
 </script>
