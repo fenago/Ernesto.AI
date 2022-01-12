@@ -1,26 +1,22 @@
 import axios from 'axios'
-import { baseUrl } from './helpers'
-// import store from '../store/index'
+import { constants } from './constants'
+import store from '../store'
+import router from '../router'
 
 const instance = axios.create({
-  baseURL: baseUrl(),
+  baseURL: constants.BASE_URL,
 })
 
-// response interceptor
-instance.interceptors.response.use(
-  response => {
-    // Any status code that lie within the range of 2xx cause this function to trigger
-    return response
-  },
-  error => {
-    // Any status codes that falls outside the range of 2xx cause this function to trigger
-    // unauthorized
-    // if (error.response.status === 403) {
-    //   store.dispatch('user/clearSession')
-    //   location.assign(`${baseUrl()}/logout`)
-    // }
-    return Promise.reject(error)
-  },
-)
+axios.interceptors.response.use(undefined, function (error) {
+  if (!error) {
+    return
+  }
+  const originalRequest = error.config
+  if (error.response.status === 401 && !originalRequest._retry) {
+    originalRequest._retry = true
+    store.dispatch('user/clearToken')
+    return router.push('/login')
+  }
+})
 
 export default instance

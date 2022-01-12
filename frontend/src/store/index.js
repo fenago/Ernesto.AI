@@ -15,13 +15,11 @@ const store = new Vuex.Store({
   ],
 })
 
-store.subscribe(mutation => {
-  if (!mutation.type.startsWith('user/')) return
-
-  store.dispatch('user/update', mutation)
-})
-
-store.dispatch('app/init')
+/**
+ * open this if init method is required
+ * init with call when store will set up first time
+ */
+// store.dispatch('app/init')
 
 export default store
 
