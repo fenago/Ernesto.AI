@@ -1,0 +1,12 @@
+*.log
+*.pyc
+*.tmp
+*.o
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+*.csv
+*.gif
+*.jfif
