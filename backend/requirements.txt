@@ -1,7 +1,0 @@
-flake8==3.5.0
-Scrapy==2.5.0
-shub==2.8.1
-selenium==3.141.0
--e git+https://github.com/scrapy/scrapyd-client.git#egg=scrapyd_client
-scrapyd==1.2.1
-selenium==3.141.0
