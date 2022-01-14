@@ -1,0 +1,1 @@
+web: gunicorn job_scheduler_api.wsgi --log-file -
