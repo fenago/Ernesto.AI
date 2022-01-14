@@ -1,0 +1,1 @@
+from .ArtworksPipeline import ArtworksPipeline
