@@ -14,6 +14,7 @@ from pathlib import Path
 import datetime
 from decouple import config
 import os
+import django_on_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 # BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,13 +30,14 @@ SECRET_KEY = 'django-insecure-j29s3xhlzgj$$w$x+uzmi2h(9&mill)&j4a40vc3c(es*+v_s=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    'django.contrib.admin',    
+    'corsheaders',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -46,7 +48,9 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -56,6 +60,9 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'job_scheduler_api.urls'
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = ['*']
 
 TEMPLATES = [
     {
@@ -157,6 +164,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
+STATIC_ROOT  =   os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
 # Default primary key field type
@@ -179,3 +187,5 @@ path.mkdir(parents=True, exist_ok=True)
 SCRAPPER_SCRAPYD_DIR = '/home/omparkash/other_projects/job-scrapers/venv/bin/'
 SCRAPPER_PROJECT_DIR = '/home/omparkash/other_projects/job-scrapers/artworks'
 SCRAPPER_PROJECT_NAME = 'artworks'
+
+django_on_heroku.settings(locals())

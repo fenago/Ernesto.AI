@@ -37,44 +37,74 @@
                     </v-card-title>
                   </v-row>
                   <v-card-text class="text-center pt-8">
-                    <v-row class="flex-column">
-                      <v-col>
-                        <v-btn
-                          width="100%"
-                          color="primary"
-                          @click="onLoginWithAzureAD"
-                        >
-                          Login as Admin/Instructor
-                        </v-btn>
-                      </v-col>
-                      <v-col>
-                        <v-btn
-                          text
-                          x-small
-                          plain
-                          color="secondary"
-                          class="font-weight-medium"
-                          @click="routeToForgetPassword"
-                        >
-                          Forgot password?
-                        </v-btn>
-                      </v-col>
-                      <v-col>
-                        <span class="d-block">
-                          <small>Do not have an account?</small>
-                        </span>
-                        <v-btn
-                          text
-                          small
-                          plain
-                          color="secondary"
-                          class="font-weight-medium"
-                          @click="routeToRegister"
-                        >
-                          Create an account
-                        </v-btn>
-                      </v-col>
-                    </v-row>
+                    <v-form
+                      ref="form"
+                      v-model="formDetails.isValid"
+                      lazy-validation
+                    >
+                      <v-row class="flex-column">
+                        <v-col>
+                          <v-text-field
+                            v-model="formDetails.model.username"
+                            :rules="formDetails.validation.usernameRules"
+                            type="text"
+                            width="100%"
+                            color="primary"
+                            label="Username"
+                            @keyup.enter="onLogin"
+                          />
+                        </v-col>
+                        <v-col>
+                          <v-text-field
+                            v-model="formDetails.model.password"
+                            :rules="formDetails.validation.passwordRules"
+                            type="text"
+                            width="100%"
+                            color="primary"
+                            label="Password"
+                            @keyup.enter="onLogin"
+                          />
+                        </v-col>
+                        <v-col>
+                          <v-btn
+                            :disabled="!formDetails.isValid"
+                            :loading="formDetails.isLoading"
+                            width="100%"
+                            color="primary"
+                            @click="onLogin"
+                          >
+                            Login
+                          </v-btn>
+                        </v-col>
+                        <v-col>
+                          <v-btn
+                            text
+                            x-small
+                            plain
+                            color="secondary"
+                            class="font-weight-medium"
+                            @click="routeToForgetPassword"
+                          >
+                            Forgot password?
+                          </v-btn>
+                        </v-col>
+                        <v-col>
+                          <span class="d-block">
+                            <small>Do not have an account?</small>
+                          </span>
+                          <v-btn
+                            text
+                            small
+                            plain
+                            color="secondary"
+                            class="font-weight-medium"
+                            @click="routeToRegister"
+                          >
+                            Create an account
+                          </v-btn>
+                        </v-col>
+                      </v-row>
+                    </v-form>
                   </v-card-text>
                 </v-card>
               </v-col>
@@ -96,18 +126,70 @@
 </template>
 
 <script>
-  import { baseUrl } from '../../util/helpers'
+// Helpers
+  import store from '../../store'
+
+  // Services
+  import { authenticationDataService } from '../../services/authenticationDataService'
 
   export default {
     name: 'LoginPage',
     data () {
       return {
         isLoginAsStudent: false,
+        formDetails: {
+          isValid: false,
+          isLoading: false,
+          validation: {
+            usernameRules: [
+              v => !!v || 'Username is required',
+              v =>
+                (v && v.length <= 20) ||
+                'User name must be less than 20 characters',
+            ],
+            passwordRules: [
+              v => !!v || 'Password is required',
+              v =>
+                (v && v.length <= 20) ||
+                'Password must be less than 20 characters',
+            ],
+          },
+          model: {
+            username: '',
+            password: '',
+          },
+        },
       }
     },
+
     methods: {
-      onLoginWithAzureAD () {
-        location.assign(`${baseUrl()}/login`)
+      async onLogin () {
+        if (!this.isFormValid()) {
+          return
+        }
+
+        this.formDetails.isLoading = true
+        const payload = { ...this.formDetails.model }
+
+        try {
+          const response = await authenticationDataService.login(payload)
+          const { token } = response
+
+          if (!token) {
+            throw 'User is not authorized'
+          }
+
+          store.dispatch('user/setToken', token)
+          this.$router.push('/')
+        } catch (error) {
+          console.error(error, 'Failed to get logged in')
+        } finally {
+          this.formDetails.isLoading = false
+        }
+      },
+      isFormValid () {
+        this.formDetails.isValid = this.$refs.form.validate()
+        return this.formDetails.isValid
       },
       routeToForgetPassword () {},
       routeToRegister () {},

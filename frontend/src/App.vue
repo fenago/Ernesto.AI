@@ -1,11 +1,16 @@
 <template>
   <v-fade-transition mode="out-in">
-    <router-view />
+    <div>
+      <router-view />
+
+      <!-- global notfications -->
+      <notifications />
+    </div>
   </v-fade-transition>
 </template>
 
 <script>
-  // Styles
+// Styles
   import '@/styles/overrides.sass'
 
   export default {

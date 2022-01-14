@@ -12,11 +12,11 @@ const state = {
       icon: 'mdi-view-dashboard',
       to: '/',
     },
-    // {
-    //   title: 'User Profile',
-    //   icon: 'mdi-account',
-    //   to: '/components/profile/',
-    // },
+    {
+      title: 'Job Search',
+      icon: 'mdi-magnify',
+      to: '/job-search',
+    },
   ],
 }
 

@@ -11,14 +11,16 @@
 </template>
 
 <script>
-  // services
-  import store from '../../../store/index'
-  import { baseUrl } from '../../../util/helpers'
+  // Store
+  import store from '../../../store'
 
   export default {
     name: 'DefaultLogout',
     methods: {
-      onLogout () {},
+      onLogout () {
+        store.dispatch('user/clearToken')
+        this.$router.push('/login')
+      },
     },
   }
 </script>

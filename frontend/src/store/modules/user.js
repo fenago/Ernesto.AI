@@ -1,13 +1,11 @@
-// Utilities
+// Packages
 import { make } from 'vuex-pathify'
-import lodashIsEmpty from 'lodash/isEmpty'
 
 // Globals
 import { IN_BROWSER } from '@/util/globals'
 
-// services
-import axios from '@/util/axios'
-import { constants } from '@/util/constants'
+// Utilities
+import axios from '../../util/axios'
 
 const state = {
   dark: false,
@@ -28,82 +26,64 @@ const state = {
     'https://demos.creative-tim.com/material-dashboard-pro/assets/img/sidebar-4.jpg',
   ],
   rtl: false,
-  isAuthenticated: false,
+  token: null,
 }
 
 const mutations = make.mutations(state)
 
 const actions = {
-  fetch: ({ commit }) => {
-    const local = localStorage.getItem('vuetify@user') || '{}'
-    const user = JSON.parse(local)
+  ...make.actions(state),
 
-    for (const key in user) {
-      commit(key, user[key])
-    }
-
-    if (user.dark === undefined) {
-      commit('dark', window.matchMedia('(prefers-color-scheme: dark)'))
-    }
-  },
-  update: ({ state }) => {
+  setToken: ({ commit, dispatch }, token) => {
     if (!IN_BROWSER) return
-    localStorage.setItem('vuetify@user', JSON.stringify(state))
+    token = `jwt ${token}`
+    sessionStorage.setItem('token', JSON.stringify(token))
+    commit('token', token)
+    dispatch('setHeader', token)
   },
-  setSession: async ({ commit, dispatch }) => {
-    await axios
-      .get('/userinfo')
-      .then(res => {
-        if (res.status === 200) {
-          sessionStorage.setItem(
-            constants.sessionStorageKeys.USER,
-            JSON.stringify(res.data),
-          )
-          commit('isAuthenticated', true)
-        }
-      })
-      .catch(err => {
-        dispatch('clearSession')
-        console.error(err, 'failed to get user info')
-      })
+
+  setHeader: ({ commit }, token) => {
+    axios.defaults.headers.common.Authorization = token
   },
-  clearSession: ({ commit }) => {
-    sessionStorage.removeItem(constants.sessionStorageKeys.USER)
-    commit('isAuthenticated', false)
+
+  clearToken: ({ commit, dispatch }) => {
+    sessionStorage.removeItem('token')
+    commit('token', null)
+    dispatch('setHeader', null)
   },
 }
 
 const getters = {
+  ...make.getters(state),
+
   dark: (state, getters) => {
     return state.dark || getters.gradient.indexOf('255, 255, 255') === -1
   },
+
   gradient: state => {
     return state.gradients[state.drawer.gradient]
   },
+
   image: state => {
     return state.drawer.image === ''
       ? state.drawer.image
       : state.images[state.drawer.image]
   },
-  isAuthenticated: state => {
-    if (!state.isAuthenticated) {
-      const session =
-        sessionStorage.getItem(constants.sessionStorageKeys.USER) || '{}'
-      const user = JSON.parse(session)
-      if (lodashIsEmpty(user)) {
-        return false
-      }
+  getToken: state => {
+    if (state.token) {
+      return state.token
     }
-    return true
+    const local = sessionStorage.getItem('token') || '""'
+    const token = JSON.parse(local)
+    return token
   },
-  isSessionExpired: () => {
-    const session =
-      sessionStorage.getItem(constants.sessionStorageKeys.USER) || '{}'
-    const user = JSON.parse(session)
-    if (!lodashIsEmpty(user)) {
-      return false
+  isAuthenticated: state => {
+    if (state.token) {
+      return true
     }
-    return true
+    const local = sessionStorage.getItem('token') || '""'
+    const token = JSON.parse(local)
+    return !!token
   },
 }
 
