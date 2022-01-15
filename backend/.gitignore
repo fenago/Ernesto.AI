@@ -15,3 +15,8 @@ coverage.xml
 *.filepart
 *.jfif
 *.csv
+dbs
+db.sqlite3
+build/
+eggs/
+project.egg-info

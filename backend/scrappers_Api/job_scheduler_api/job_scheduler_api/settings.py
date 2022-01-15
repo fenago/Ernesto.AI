@@ -15,6 +15,11 @@ import datetime
 from decouple import config
 import os
 import django_on_heroku
+import environ
+
+# Initialise environment variables
+env = environ.Env()
+environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 # BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +30,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-j29s3xhlzgj$$w$x+uzmi2h(9&mill)&j4a40vc3c(es*+v_s='
+SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -184,8 +189,8 @@ ACCEPTED_CSV = os.path.join(MEDIA_ROOT, 'accepted_csv')
 path = Path(ACCEPTED_CSV)
 path.mkdir(parents=True, exist_ok=True)
 
-SCRAPPER_SCRAPYD_DIR = '/home/omparkash/other_projects/job-scrapers/venv/bin/'
-SCRAPPER_PROJECT_DIR = '/home/omparkash/other_projects/job-scrapers/artworks'
-SCRAPPER_PROJECT_NAME = 'artworks'
+SCRAPPER_SCRAPYD_DIR = env("SCRAPPER_SCRAPYD_DIR")
+SCRAPPER_PROJECT_DIR = env("SCRAPPER_PROJECT_DIR")
+SCRAPPER_PROJECT_NAME = env("SCRAPPER_PROJECT_NAME")
 
 django_on_heroku.settings(locals())
