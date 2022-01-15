@@ -9,6 +9,7 @@ from scrapyd_api import ScrapydAPI
 from api.models import ScrapperDetails
 from api.management.commands.run_scrapping import Command
 from django.conf import settings
+from django.http import HttpResponse
 import os
 
 User = get_user_model()
@@ -82,6 +83,11 @@ class ScrapperStatus(APIView):
                     scrapper.result_status = job_status
                     scrapper.save()
                     if os.path.exists(scrapper.csv_path) and scrapper.result_status == 'FIN' :
+                        # with open(scrapper.csv_path) as csv_file:
+                        #     data = csv_file.read()      
+                        # response = HttpResponse(data, content_type='text/csv')
+                        # response['Content-Disposition'] = 'attachment; filename="{}"'.format(scrapper.csv_path.split('/')[-1])
+                        # return response
                         return Response({'error': '', 'error_code': '', 'data': {"status": job_status,'csv_path':scrapper.csv_path}}, status=200)
                     else:
                         return Response({'error': 'There might be some issues while scheduling scrapper.', 'error_code': '', 'data': {"status": job_status,'csv_path':'CSV NOT FOUND...!'}}, status=200) 
