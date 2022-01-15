@@ -1,0 +1,17 @@
+*.log
+*.pyc
+*.tmp
+*.o
+htmlcov/
+.env
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+.vscode
+*.jp*g
+*.png
+*.gif
+*.filepart
+*.jfif
+*.csv
