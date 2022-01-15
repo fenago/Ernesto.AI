@@ -84,7 +84,7 @@ class ScrapperStatus(APIView):
                     if os.path.exists(scrapper.csv_path) and scrapper.result_status == 'FIN' :
                         return Response({'error': '', 'error_code': '', 'data': {"status": job_status,'csv_path':scrapper.csv_path}}, status=200)
                     else:
-                        return Response({'error': '', 'error_code': '', 'data': {"status": job_status,'csv_path':''}}, status=200) 
+                        return Response({'error': 'There might be some issues while scheduling scrapper.', 'error_code': '', 'data': {"status": job_status,'csv_path':'CSV NOT FOUND...!'}}, status=200) 
                 else:
                     return Response({'error': 'Given job id does not exist.', 'error_code': '', 'data': {}}, status=200)   
             else:
