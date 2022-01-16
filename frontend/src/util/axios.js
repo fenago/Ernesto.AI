@@ -15,7 +15,7 @@ axios.interceptors.response.use(undefined, function (error) {
   if (error.response.status === 401 && !originalRequest._retry) {
     originalRequest._retry = true
     store.dispatch('user/clearToken')
-    return router.push('/login')
+    return router.push('/')
   }
 })
 

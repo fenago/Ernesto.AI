@@ -20,6 +20,7 @@ const store = new Vuex.Store({
  * init with call when store will set up first time
  */
 // store.dispatch('app/init')
+store.dispatch('user/init')
 
 export default store
 
