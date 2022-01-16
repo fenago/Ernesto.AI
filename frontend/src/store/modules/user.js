@@ -34,25 +34,25 @@ const mutations = make.mutations(state)
 const actions = {
   ...make.actions(state),
 
-  init: async ({ commit, dispatch }) => {
+  init: ({ commit, dispatch }) => {
     const local = sessionStorage.getItem('token') || '""'
-    const token = await JSON.parse(local) || null
-    await commit('token', token)
-    await dispatch('setHeader')
+    const token = JSON.parse(local) || null
+    commit('token', token)
+    dispatch('setHeader')
   },
 
-  setToken: async ({ commit, dispatch }, token) => {
+  setToken: ({ commit, dispatch }, token) => {
     if (!IN_BROWSER) return
     token = `jwt ${token}`
     sessionStorage.setItem('token', JSON.stringify(token))
-    await commit('token', token)
-    await dispatch('setHeader')
+    commit('token', token)
+    dispatch('setHeader')
   },
 
-  clearToken: async ({ commit, dispatch }) => {
+  clearToken: ({ commit, dispatch }) => {
     sessionStorage.removeItem('token')
-    await commit('token', null)
-    await dispatch('setHeader')
+    commit('token', null)
+    dispatch('setHeader')
   },
 
   setHeader: () => {
@@ -76,20 +76,20 @@ const getters = {
       ? state.drawer.image
       : state.images[state.drawer.image]
   },
-  getToken: async state => {
+  getToken: state => {
     if (state.token) {
       return state.token
     }
     const local = sessionStorage.getItem('token') || '""'
-    const token = await JSON.parse(local) || null
+    const token = JSON.parse(local) || null
     return token
   },
-  isAuthenticated: async state => {
+  isAuthenticated: state => {
     if (state.token) {
       return true
     }
     const local = sessionStorage.getItem('token') || '""'
-    const token = await JSON.parse(local) || null
+    const token = JSON.parse(local) || null
     return !!token
   },
 }

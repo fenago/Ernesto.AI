@@ -61,28 +61,30 @@ const router = new Router({
 
 // if token is not available, redirect user to login page
 router.beforeEach((to, from, next) => {
-  if (to.matched.every(record => !record.meta.requiresAuth)) {
-    next()
-    return
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    console.log(store.get('user/isAuthenticated'), '1');
+    if (store.get('user/isAuthenticated')) {
+      next();
+      return;
+    }
+    next("/login");
+  } else {
+    next();
   }
-  if (store.get('user/isAuthenticated')) {
-    next()
-    return
-  }
-  next('/login')
 })
 
 // if token is available, redirect user to home page
 router.beforeEach((to, from, next) => {
-  if (to.matched.every(record => !record.meta.guest)) {
-    next()
-    return
+  if (to.matched.some((record) => record.meta.guest)) {
+    console.log(store.get('user/isAuthenticated'), '2');
+    if (store.get('user/isAuthenticated')) {
+      next("/");
+      return;
+    }
+    next();
+  } else {
+    next();
   }
-  if (store.get('user/isAuthenticated')) {
-    next('/')
-    return
-  }
-  next()
 })
 
 export default router
