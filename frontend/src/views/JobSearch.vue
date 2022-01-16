@@ -82,18 +82,22 @@
                   {{ jobStatusMap[item[column.value]] }}
                 </div>
 
+                <div v-else-if="column.value === 'created_on'">
+                  {{ getDateTime([item[column.value]]) }}
+                </div>
+
                 <div v-else-if="column.value === 'actions'">
                   <v-btn
+                    :disabled="checkJobStatus('RUN', item.result_status) || checkJobStatus('PEN', item.result_status)"
                     icon
-                    :disabled="isJobRunning(item.result_status)"
                     @click="getJob(item)"
                   >
                     <v-icon>mdi-download</v-icon>
                   </v-btn>
                   <v-btn
-                    icon
-                    :disabled="isJobCompleted(item.result_status)"
                     :key="item.job_id"
+                    :disabled="checkJobStatus('FIN', item.result_status)"
+                    icon
                     @click="cancelJob(item)"
                   >
                     <v-icon>mdi-cancel</v-icon>
@@ -123,6 +127,9 @@
 // Services
 import { jobSearchDataService } from '../services/job-search/jobSearchDataService'
 import { constants } from '../util/constants'
+
+// Utilities
+import { getDateTime } from '../util/helpers';
 
 export default {
   name: 'JobSearch',
@@ -167,6 +174,11 @@ export default {
           location: '',
         },
       },
+      polling: {
+        inProgress: false,
+        interval: 0,
+        jobsId: []
+      }
     }
   },
   created () {
@@ -188,6 +200,7 @@ export default {
         this.$notify({ type: 'success', text: 'Job search is scheduled' })
       } catch (error) {
         console.log(error, 'Cannot search job')
+        this.$notify({ type: 'error', text: 'Cannot search job' })
       } finally {
         this.formDetails.isLoading = false
       }
@@ -201,16 +214,17 @@ export default {
         this.tableModel.rows = (response.data && response.data[0]) || []
       } catch (error) {
         console.log(error, 'Cannot get jobs list')
+        this.$notify({ type: 'error', text: 'Cannot get jobs list' })
       } finally {
         this.tableModel.isLoading = false
-        this.$notify({ type: 'error', text: 'Cannot get jobs list' })
+        this.pollJobs()
       }
     },
     async getJob ({ job_id }) {
       this.tableModel.isDownloading = true
 
       try {
-        const response = await jobSearchDataService.getJob(job_id)
+        const response = await jobSearchDataService.getJobStatus(job_id)
         const { csv_path: csvPath } = response.data || {}
         this.downloadFile(csvPath)
         this.$notify({ type: 'error', text: 'File downloaded successfully' })
@@ -252,12 +266,51 @@ export default {
       }
       this.$refs.form.reset()
     },
-    isJobRunning (jobStatus) {
-      return jobStatus === 'RUN'
+    checkJobStatus (type, value) {
+      return value === type
     },
-    isJobCompleted (jobStatus) {
-      return jobStatus === 'FIN'
-    }
+    pollJobs () {
+      if (this.polling.inProgress) {
+        return
+      }
+      this.polling.jobsId = this.tableModel.rows.filter(({ result_status }) => this.checkJobStatus('RUN', result_status) || this.checkJobStatus('PEN', result_status)).map(({ job_id }) => job_id)
+      this.polling.inProgress = true
+      this.polling.interval = setInterval(this.pollItems, 10000) // polling interval is 10 seconds
+    },
+    async pollItems () {
+      if (!this.polling.jobsId || !this.polling.jobsId.length) {
+        this.clearPollingInterval()
+        return
+      }
+
+      try {
+        const response = await jobSearchDataService.getJobsStatus(this.polling.jobsId)
+        const latestJobs = (response.data && response.data.status) || []
+
+        latestJobs.forEach(({ job_id, status }) => {
+          if (this.checkJobStatus('RUN', status) || this.checkJobStatus('PEN', status)) {
+            return
+          }
+          this.polling.jobsId = this.polling.jobsId.filter(id => id !== job_id)
+          this.tableModel.rows = this.tableModel.rows.map(row => {
+            if (row.job_id === job_id) {
+              row.result_status = status
+            }
+            return row
+          })
+        })
+      } catch (error) {
+        console.log(error, 'Cannot get job details')
+      }
+    },
+    clearPollingInterval () {
+      this.polling = {
+        inProgress: false,
+        interval: 0,
+        jobsId: []
+      }
+    },
+    getDateTime: getDateTime,
   },
 }
 </script>

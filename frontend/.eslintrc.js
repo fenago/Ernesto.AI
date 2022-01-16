@@ -19,9 +19,7 @@ module.exports = {
 		'no-unused-vars': 'warn',
 		"semi": 'off',
 		'indent': "off",
-		'vue/script-indent': ['warn', 2, {
-			'baseIndent': 1
-		}],
+		'vue/script-indent': "off",
 		"quotes": "off",
 		'camelcase': 'off',
 		"comma-dangle": "off",

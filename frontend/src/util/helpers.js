@@ -14,3 +14,8 @@ export const baseUrl = () => {
   const url = window.location.href.split('/')
   return url[0] + '//' + url[2]
 }
+
+export const getDateTime = (timestamp = null) => {
+  const dateTime = timestamp ? new Date(timestamp) : new Date()
+  return `${dateTime.getDate()}/${(dateTime.getMonth() + 1)}/${dateTime.getFullYear()} & ${dateTime.getHours()}:${dateTime.getMinutes()}:${dateTime.getSeconds()}`
+}

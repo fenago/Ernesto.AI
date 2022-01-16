@@ -6,9 +6,14 @@ export const jobSearchDataService = (function () {
     return axios.get(url).then(res => res.data)
   }
 
-  const getJob = (jobId) => {
+  const getJobStatus = (jobId) => {
     const url = '/api/get_status/'
     return axios.post(url, { job_id: jobId }).then(res => res.data)
+  }
+
+  const getJobsStatus = (jobIds) => {
+    const url = '/api/scrappers_statuses/'
+    return axios.post(url, { job_ids: jobIds }).then(res => res.data)
   }
 
   const searchJob = (payload) => {
@@ -23,7 +28,8 @@ export const jobSearchDataService = (function () {
 
   return {
     getJobs,
-    getJob,
+    getJobStatus,
+    getJobsStatus,
     searchJob,
     cancelJob,
   }
