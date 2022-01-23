@@ -251,7 +251,7 @@ export default {
         return
       }
       const a = document.createElement("a");
-      a.href = path
+      a.href = `${constants.BASE_URL}${path}`
       a.download = 'searched-jobs.csv'
       a.click()
     },

@@ -12,5 +12,5 @@ export const constants = {
     sessionStorageKeys: {
         USER: 'userSession',
     },
-    BASE_URL: 'http://127.0.0.1:8000',
+    BASE_URL: process.env.VUE_APP_SERVER_BASE_URL,
   }
