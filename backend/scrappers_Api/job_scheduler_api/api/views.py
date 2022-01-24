@@ -32,9 +32,10 @@ class ExecuteScrapper(APIView):
 
             # User scrapydAPI
             filename = '{}/{}_dice_jobs.csv'.format((settings.ACCEPTED_CSV).split('job_scheduler_api')[-1],int(time.time()))
+            print((settings.ACCEPTED_CSV).split('job_scheduler_api')[-1])
             job_detail = request.data.get('job')
             location_detail = request.data.get('location')
-            scrapyd = ScrapydAPI('http://localhost:6800')
+            scrapyd = ScrapydAPI('http://ernestoai.eastus.cloudapp.azure.com:6802/')
             job_id = scrapyd.schedule('artworks', 'dice_jobs', job=job_detail, location=location_detail,filename=filename)
             time.sleep(10)
             state = scrapyd.job_status('artworks', job_id)
@@ -51,7 +52,7 @@ class CancelScrapper(APIView):
     def post(self, request):
         try:
             if request.data.get('job_id'):
-                scrapyd = ScrapydAPI('http://127.0.0.1:6800/cancel.json')
+                scrapyd = ScrapydAPI('http://ernestoai.eastus.cloudapp.azure.com:6802/cancel.json')
                 for i in range(1,4):
                     scrapyd.cancel('artworks', request.data.get('job_id'))
                 return Response({'error': '', 'error_code': '', 'data': 'Job cancelled successfully....!'}, status=200)
@@ -74,7 +75,7 @@ class ScrapperStatus(APIView):
     def post(self, request):
         try:
             if request.data.get('job_id'):
-                scrapyd = ScrapydAPI('http://localhost:6800')
+                scrapyd = ScrapydAPI('http://ernestoai.eastus.cloudapp.azure.com:6802')
                 job_status = scrapyd.job_status('artworks',request.data.get('job_id'))
                 scrap_details=ScrapperDetails.objects.filter(job_id=request.data.get('job_id'))
                 if scrap_details.exists():
@@ -105,7 +106,7 @@ class ListScrapperStatus(APIView):
     def post(self, request):
         try:
             if request.data.get('job_ids'):
-                scrapyd = ScrapydAPI('http://localhost:6800')
+                scrapyd = ScrapydAPI('http://ernestoai.eastus.cloudapp.azure.com:6802')
                 status_list = []
                 for each in request.data.get('job_ids'):
                     job_status = scrapyd.job_status('artworks',each)
