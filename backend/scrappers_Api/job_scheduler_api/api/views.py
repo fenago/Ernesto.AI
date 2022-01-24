@@ -39,7 +39,7 @@ class ExecuteScrapper(APIView):
             time.sleep(10)
             state = scrapyd.job_status('artworks', job_id)
             state = get_results(state)
-            ScrapperDetails.objects.create(job_id=job_id,job=job_detail.replace('%20',' '),location=location_detail.replace('%20',' '),csv_path=filename.split('job_scheduler_api')[-1], result_status=state)
+            ScrapperDetails.objects.create(job_id=job_id,job=job_detail.replace('%20',' '),location=location_detail.replace('%20',' '),csv_path=filename, result_status=state)
 
             return Response({'error': '', 'error_code': '', 'data': {"job_id": job_id, "status":state}}, status=200)
         except Exception as error:
@@ -88,7 +88,7 @@ class ScrapperStatus(APIView):
                         # response = HttpResponse(data, content_type='text/csv')
                         # response['Content-Disposition'] = 'attachment; filename="{}"'.format(scrapper.csv_path.split('/')[-1])
                         # return response
-                        return Response({'error': '', 'error_code': '', 'data': {"status": job_status,'csv_path':scrapper.csv_path}}, status=200)
+                        return Response({'error': '', 'error_code': '', 'data': {"status": job_status,'csv_path':scrapper.csv_path.split('job_scheduler_api')[-1]}}, status=200)
                     else:
                         return Response({'error': 'There might be some issues while scheduling scrapper.', 'error_code': '', 'data': {"status": job_status,'csv_path':'CSV NOT FOUND...!'}}, status=200) 
                 else:
