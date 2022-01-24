@@ -34,12 +34,12 @@ class ExecuteScrapper(APIView):
             filename = '{}/{}_dice_jobs.csv'.format(settings.ACCEPTED_CSV,int(time.time()))
             job_detail = request.data.get('job')
             location_detail = request.data.get('location')
-            scrapyd = ScrapydAPI('http://ernestoai.eastus.cloudapp.azure.com:6802/')
+            scrapyd = ScrapydAPI('http://localhost:6800')
             job_id = scrapyd.schedule('artworks', 'dice_jobs', job=job_detail, location=location_detail,filename=filename)
             time.sleep(10)
             state = scrapyd.job_status('artworks', job_id)
             state = get_results(state)
-            ScrapperDetails.objects.create(job_id=job_id,job=job_detail.replace('%20',' '),location=location_detail.replace('%20',' '),csv_path=filename, result_status=state)
+            ScrapperDetails.objects.create(job_id=job_id,job=job_detail.replace('%20',' '),location=location_detail.replace('%20',' '),csv_path=filename.split('job_scheduler_api')[-1], result_status=state)
 
             return Response({'error': '', 'error_code': '', 'data': {"job_id": job_id, "status":state}}, status=200)
         except Exception as error:
@@ -51,7 +51,7 @@ class CancelScrapper(APIView):
     def post(self, request):
         try:
             if request.data.get('job_id'):
-                scrapyd = ScrapydAPI('http://ernestoai.eastus.cloudapp.azure.com:6802/cancel.json')
+                scrapyd = ScrapydAPI('http://localhost:6800/cancel.json')
                 for i in range(1,4):
                     scrapyd.cancel('artworks', request.data.get('job_id'))
                 return Response({'error': '', 'error_code': '', 'data': 'Job cancelled successfully....!'}, status=200)
@@ -74,7 +74,7 @@ class ScrapperStatus(APIView):
     def post(self, request):
         try:
             if request.data.get('job_id'):
-                scrapyd = ScrapydAPI('http://ernestoai.eastus.cloudapp.azure.com:6802')
+                scrapyd = ScrapydAPI('http://localhost:6800')
                 job_status = scrapyd.job_status('artworks',request.data.get('job_id'))
                 scrap_details=ScrapperDetails.objects.filter(job_id=request.data.get('job_id'))
                 if scrap_details.exists():
@@ -88,7 +88,7 @@ class ScrapperStatus(APIView):
                         # response = HttpResponse(data, content_type='text/csv')
                         # response['Content-Disposition'] = 'attachment; filename="{}"'.format(scrapper.csv_path.split('/')[-1])
                         # return response
-                        return Response({'error': '', 'error_code': '', 'data': {"status": job_status,'csv_path':scrapper.csv_path.split('job_scheduler_api')[-1]}}, status=200)
+                        return Response({'error': '', 'error_code': '', 'data': {"status": job_status,'csv_path':scrapper.csv_path}}, status=200)
                     else:
                         return Response({'error': 'There might be some issues while scheduling scrapper.', 'error_code': '', 'data': {"status": job_status,'csv_path':'CSV NOT FOUND...!'}}, status=200) 
                 else:
@@ -105,7 +105,7 @@ class ListScrapperStatus(APIView):
     def post(self, request):
         try:
             if request.data.get('job_ids'):
-                scrapyd = ScrapydAPI('http://ernestoai.eastus.cloudapp.azure.com:6802')
+                scrapyd = ScrapydAPI('http://localhost:6800')
                 status_list = []
                 for each in request.data.get('job_ids'):
                     job_status = scrapyd.job_status('artworks',each)
