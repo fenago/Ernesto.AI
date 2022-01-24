@@ -31,8 +31,7 @@ class ExecuteScrapper(APIView):
             Command.handle(self)
 
             # User scrapydAPI
-            filename = '{}/{}_dice_jobs.csv'.format((settings.ACCEPTED_CSV).split('job_scheduler_api')[-1],int(time.time()))
-            print((settings.ACCEPTED_CSV).split('job_scheduler_api')[-1])
+            filename = '{}/{}_dice_jobs.csv'.format(settings.ACCEPTED_CSV,int(time.time()))
             job_detail = request.data.get('job')
             location_detail = request.data.get('location')
             scrapyd = ScrapydAPI('http://ernestoai.eastus.cloudapp.azure.com:6802/')
@@ -89,7 +88,7 @@ class ScrapperStatus(APIView):
                         # response = HttpResponse(data, content_type='text/csv')
                         # response['Content-Disposition'] = 'attachment; filename="{}"'.format(scrapper.csv_path.split('/')[-1])
                         # return response
-                        return Response({'error': '', 'error_code': '', 'data': {"status": job_status,'csv_path':scrapper.csv_path}}, status=200)
+                        return Response({'error': '', 'error_code': '', 'data': {"status": job_status,'csv_path':scrapper.csv_path.split('job_scheduler_api')[-1]}}, status=200)
                     else:
                         return Response({'error': 'There might be some issues while scheduling scrapper.', 'error_code': '', 'data': {"status": job_status,'csv_path':'CSV NOT FOUND...!'}}, status=200) 
                 else:
